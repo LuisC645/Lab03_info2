@@ -1,19 +1,30 @@
-#include <QCoreApplication>
+#include <iostream>
+#include <string>
 
-int main(int argc, char *argv[])
+#include <rle.h>
+#include <lz78.h>
+
+using namespace std;
+
+int main()
 {
-    QCoreApplication a(argc, argv);
 
-    // Set up code that uses the Qt event loop here.
-    // Call a.quit() or a.exit() to quit the application.
-    // A not very useful example would be including
-    // #include <QTimer>
-    // near the top of the file and calling
-    // QTimer::singleShot(5000, &a, &QCoreApplication::quit);
-    // which quits the application after 5 seconds.
+    string textoOriginal = "AAAABBBCCDAA";
 
-    // If you do not need a running Qt event loop, remove the call
-    // to a.exec() or use the Non-Qt Plain C++ Application template.
+    cout << "Test RLE" << endl;
 
-    return a.exec();
+    string textoComprimido = comprimirRLE(textoOriginal);
+    cout << "Texto comprimido: " << textoComprimido << endl;
+
+    string textoDescomprimido = descomprimirRLE(textoComprimido);
+    cout << "Texto restaurado: " << textoDescomprimido << endl;
+
+    if (textoOriginal == textoDescomprimido) {
+        cout << "\nOK" << endl;
+    } else {
+        cout << "\nNo" << endl;
+    }
+
+
+    return 0;
 }
