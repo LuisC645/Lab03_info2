@@ -1,32 +1,24 @@
 #include "lz78.h"
 
-// Obtener tamaño de char*
 int obtenerLongitud(const char* texto) {
     int len = 0;
     while (texto[len] != '\0') len++;
     return len;
 }
 
-// Agregar al final
 void agregarPar(DatosComprimidos& arreglo, int indice, char c) {
 
     if (arreglo.cantidad == arreglo.capacidad) {
-
-        // Duplicar si se lleno
-        int nuevaCapacidad = 0;
-
-        if(arreglo.capacidad == 0){
-            nuevaCapacidad = 10;
-        }else {
-            nuevaCapacidad = arreglo.capacidad * 2;
-        }
+        int nuevaCapacidad = (arreglo.capacidad == 0) ? 10 : arreglo.capacidad * 2;
         ParLZ78* nuevoArreglo = new ParLZ78[nuevaCapacidad];
 
         for (int i = 0; i < arreglo.cantidad; ++i) {
             nuevoArreglo[i] = arreglo.pares[i];
         }
 
-        delete[] arreglo.pares;
+        if (arreglo.pares != nullptr) {
+            delete[] arreglo.pares;
+        }
         arreglo.pares = nuevoArreglo;
         arreglo.capacidad = nuevaCapacidad;
     }
@@ -48,10 +40,9 @@ DatosComprimidos comprimirLZ78(const char* textoOriginal) {
         char caracterActual = textoOriginal[i];
         int indiceEncontrado = 0;
 
-        // find en diccionario
         for (int j = 0; j < diccionario.cantidad; ++j) {
             if (diccionario.pares[j].indice == prefijoActual && diccionario.pares[j].c == caracterActual) {
-                indiceEncontrado = j + 1; // +1 porque el diccionario es base 1
+                indiceEncontrado = j + 1;
                 break;
             }
         }
@@ -65,7 +56,6 @@ DatosComprimidos comprimirLZ78(const char* textoOriginal) {
         }
     }
 
-    // texto pendiente
     if (prefijoActual != 0) {
         agregarPar(salida, prefijoActual, '\0');
     }
@@ -81,20 +71,16 @@ char* descomprimirLZ78(const DatosComprimidos& datos) {
     int totalCaracteres = 0;
 
     for (int i = 0; i < datos.cantidad; ++i) {
-
         int prefijo = datos.pares[i].indice;
         longitudes[i + 1] = longitudes[prefijo] + 1;
         totalCaracteres += longitudes[i + 1];
-
         if (i == datos.cantidad - 1 && datos.pares[i].c == '\0') totalCaracteres--;
     }
 
-    // Crear string final
     char* textoReconstruido = new char[totalCaracteres + 1];
     int posicionEscritura = 0;
 
     for (int i = 0; i < datos.cantidad; ++i) {
-
         int prefijo = datos.pares[i].indice;
         char c = datos.pares[i].c;
 
@@ -102,7 +88,6 @@ char* descomprimirLZ78(const DatosComprimidos& datos) {
         int indiceEscritura = posicionEscritura + tamanoFrase - 1;
 
         int actual = prefijo;
-
         while (actual != 0) {
             textoReconstruido[indiceEscritura--] = datos.pares[actual - 1].c;
             actual = datos.pares[actual - 1].indice;
@@ -121,10 +106,23 @@ char* descomprimirLZ78(const DatosComprimidos& datos) {
 }
 
 void liberarMemoria(DatosComprimidos& datos) {
+
     if (datos.pares != nullptr) {
         delete[] datos.pares;
         datos.pares = nullptr;
     }
     datos.cantidad = 0;
     datos.capacidad = 0;
+}
+
+bool comparar(const char* texto1, const char* texto2) {
+    int i = 0;
+
+    while (texto1[i] != '\0' || texto2[i] != '\0') {
+        if (texto1[i] != texto2[i]) {
+            return false;
+        }
+        i++;
+    }
+    return true;
 }
