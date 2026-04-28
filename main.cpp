@@ -1,30 +1,29 @@
 #include <iostream>
 #include <string>
-
-#include <rle.h>
-#include <lz78.h>
+#include "rle.h"
 
 using namespace std;
 
-int main()
-{
-
-    string textoOriginal = "AAAABBBCCDAA";
+int main() {
+    string textoOriginalRLE;
 
     cout << "Test RLE" << endl;
+    cin >> textoOriginalRLE;
 
-    string textoComprimido = comprimirRLE(textoOriginal);
+    cout << "\nTexto original: " << textoOriginalRLE << endl;
+
+    // Comprimir
+    string textoComprimido = comprimirRLE(textoOriginalRLE);
     cout << "Texto comprimido: " << textoComprimido << endl;
 
-    string textoDescomprimido = descomprimirRLE(textoComprimido);
-    cout << "Texto restaurado: " << textoDescomprimido << endl;
+    // Descomprimir
+    string textoRestaurado = descomprimirRLE(textoComprimido);
 
-    if (textoOriginal == textoDescomprimido) {
-        cout << "\nOK" << endl;
+    if (textoOriginalRLE == textoRestaurado) {
+        cout << "OK, gracias a lucho" << endl;
     } else {
-        cout << "\nNo" << endl;
+        cout << "Malo, culpa de bolo" << endl;
     }
-
 
     return 0;
 }

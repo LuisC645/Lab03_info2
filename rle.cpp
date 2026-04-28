@@ -1,47 +1,42 @@
 #include "rle.h"
-#include <cctype> // isdigit()
+#include <string>
 
 using namespace std;
 
 string comprimirRLE(const string& textoOriginal) {
 
-    if (textoOriginal.empty()){
-        return "";
-    }
+    if (textoOriginal.empty()) return "";
 
     string textoComprimido = "";
-    unsigned short contador = 1;
+    unsigned int contador = 1;
 
     for (unsigned int i = 1; i <= textoOriginal.length(); ++i) {
-
-        // Char igual al anterior
-        if (i < textoOriginal.length() && textoOriginal[i] == textoOriginal[i - 1]){
+        if (i < textoOriginal.length() && textoOriginal[i] == textoOriginal[i - 1]) {
             contador++;
-        } else{
-            // Reiniciar cont
-            textoComprimido += to_string(contador) + textoOriginal[i - 1];
+        } else {
+            // Delimitador
+            textoComprimido += to_string(contador) + "-" + textoOriginal[i - 1];
             contador = 1;
         }
     }
+
     return textoComprimido;
 }
 
 string descomprimirRLE(const string& textoComprimido) {
 
     string textoDescomprimido = "";
-    string numeroStr = "";
+    unsigned int i = 0;
 
-    for (unsigned short i = 0; i < textoComprimido.length(); ++i) {
+    while (i < textoComprimido.length()) {
 
-        // Guardar Num (pueden haber mas de 1)
-        if (isdigit(textoComprimido[i])) {
-            numeroStr += textoComprimido[i];
-        } else {
-            // Letra? guardar num
-            int repeticiones = stoi(numeroStr);
-            textoDescomprimido.append(repeticiones, textoComprimido[i]);
-            numeroStr = "";
-        }
+        size_t posDel = textoComprimido.find('-', i);
+
+        int repeticiones = stoi(textoComprimido.substr(i, posDel - i));
+
+        textoDescomprimido.append(repeticiones, textoComprimido[posDel + 1]);
+
+        i = posDel + 2;
     }
 
     return textoDescomprimido;
