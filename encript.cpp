@@ -36,3 +36,17 @@ string desencriptarString(const string& texto, int n, unsigned char clave) {
     }
     return resultado;
 }
+
+void encriptarBuffer(unsigned char* buffer, int tamano, int n, unsigned char clave) {
+    // Encript byte a byte por bloque de mem
+    for (int i = 0; i < tamano; ++i) {
+        buffer[i] = encriptarByte(buffer[i], n, clave);
+    }
+}
+
+void desencriptarBuffer(unsigned char* buffer, int tamano, int n, unsigned char clave) {
+    // lo mismo pero des uwu
+    for (int i = 0; i < tamano; ++i) {
+        buffer[i] = desencriptarByte(buffer[i], n, clave);
+    }
+}
