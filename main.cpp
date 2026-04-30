@@ -9,18 +9,6 @@
 
 using namespace std;
 
-bool compararTextos(const char* texto1, const char* texto2) {
-
-    int i = 0;
-
-    while (texto1[i] != '\0' || texto2[i] != '\0') {
-
-        if (texto1[i] != texto2[i]) return false;
-        i++;
-    }
-    return true;
-}
-
 // aux para leer archivos (lz78 de mem dinamica)
 char* leerArchivoDinamico(const char* ruta) {
 
@@ -33,7 +21,7 @@ char* leerArchivoDinamico(const char* ruta) {
 
     if (!archivo.read(buffer, tamano)) {
         delete[] buffer;
-        throw runtime_error("Error critico al leer el contenido del archivo.");
+        throw runtime_error("Error al leer el arch");
     }
 
     buffer[tamano] = '\0';
@@ -47,7 +35,7 @@ int main() {
     int n = 3;                  // 0 < n < 8
     unsigned char clave = 0x5A; // Clave XOR
 
-    string nombreArchivoEntrada = "data/dataset_Original_hint_5.txt";
+    string nombreArchivoEntrada = "data/dataset_Original_hint_1.txt";
 
     string rutaSalidaRLE = "data_out/salida_rle.txt";
     string rutaSalidaLZ = "data_out/salida_lz.txt";
@@ -130,14 +118,23 @@ int main() {
 
             // Validar
             ifstream archivoValidacion(rutaSalidaRLE);
-            string textoFinal((istreambuf_iterator<char>(archivoValidacion)), istreambuf_iterator<char>());
-            archivoValidacion.close();
+            string textoFinal = "";
+            string linea;
+
+            while (getline(archivoValidacion, linea)) {
+                textoFinal += linea;
+                if (!archivoValidacion.eof()) {
+                    textoFinal += "\n";
+                }
+            }
 
             if (textoOriginal == textoFinal) {
                 cout << "Funciona gracias a lucho como siempre" << endl;
             } else {
                 cout<< "No funciona, a bolo lo consumió la IA" << endl;
             }
+
+            archivoValidacion.close();
 
         } else if (opcion == 2) {
 
@@ -247,7 +244,7 @@ int main() {
             //  Validar
             char* textoFinal = leerArchivoDinamico(rutaSalidaLZ.c_str());
 
-            if (compararTextos(textoOriginal, textoFinal)) {
+            if (comparar(textoOriginal, textoFinal)) {
                 cout << "Funciona gracias a bolo como siempre " << endl;
             } else {
                 cout << "No funciona, a lucho lo consumio la IA" << endl;

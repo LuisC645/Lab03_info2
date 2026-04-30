@@ -1,5 +1,6 @@
 #include "rle.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -30,9 +31,11 @@ string descomprimirRLE(const string& textoComprimido) {
 
     while (i < textoComprimido.length()) {
 
-        size_t posDel = textoComprimido.find('-', i);
+        unsigned int posDel = textoComprimido.find('-', i);
 
-        int repeticiones = stoi(textoComprimido.substr(i, posDel - i));
+        // cout << (posDel) << endl;
+
+        unsigned int repeticiones = stoi(textoComprimido.substr(i, posDel - i));
 
         textoDescomprimido.append(repeticiones, textoComprimido[posDel + 1]);
 
